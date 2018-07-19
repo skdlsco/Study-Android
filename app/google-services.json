@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "80769591288",
+    "firebase_url": "https://fir-1a514.firebaseio.com",
+    "project_id": "fir-1a514",
+    "storage_bucket": "fir-1a514.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:80769591288:android:e88906978535a478",
+        "android_client_info": {
+          "package_name": "com.eka.firebase"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "80769591288-kbshuheujk0f7lrurrlg8iibk855r89b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAtXc_iu2re8oyZTy7jbcK8IxzHjSUIMpk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
