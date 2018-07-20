@@ -3,14 +3,16 @@ package com.eka.camerapreview
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.Rect
-import android.graphics.YuvImage
 import android.hardware.Camera
+import android.os.Environment
 import android.util.AttributeSet
 import android.util.Log
 import android.view.SurfaceHolder
 import android.view.SurfaceView
-import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class CameraView : SurfaceView, SurfaceHolder.Callback {
@@ -104,7 +106,7 @@ class CameraView : SurfaceView, SurfaceHolder.Callback {
     fun getPicture(callback: (img: ByteArray) -> Unit) {
         mCamera?.takePicture(null, null) { biteArray, camera ->
 
-//            val params = mCamera!!.parameters
+            //            val params = mCamera!!.parameters
 //            val w = params.previewSize.width
 //            val h = params.previewSize.height
 //            val format = params.previewFormat
@@ -120,6 +122,27 @@ class CameraView : SurfaceView, SurfaceHolder.Callback {
 //            val bmp = BitmapFactory.decodeByteArray(biteArray, 0, biteArray.size)
 
             callback.invoke(biteArray)
+        }
+    }
+
+    fun setFocus(onFocus: (Boolean, Camera) -> Unit) {
+        mCamera?.autoFocus { b, camera ->
+            onFocus(b, camera)
+        }
+    }
+
+    fun saveImage() {
+        getPicture { img ->
+            val bmp = BitmapFactory.decodeByteArray(img, 0, img.size)
+            var folder = Environment.getExternalStorageDirectory().absolutePath + "/myCamera/img/"
+            val filename = "img${SimpleDateFormat("yyyyMMddhhmmss").format(Date())}.jpg"
+            Log.e("asdf", filename)
+            var folderPath = File(folder)
+            if (!folderPath.isDirectory)
+                folderPath.mkdirs()
+            val out = FileOutputStream(folder + filename)
+            bmp.compress(Bitmap.CompressFormat.JPEG, 100, out)
+            out.close()
         }
     }
 }

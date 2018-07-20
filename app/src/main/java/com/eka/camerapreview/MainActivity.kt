@@ -10,7 +10,6 @@ import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.SurfaceHolder
-import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -22,15 +21,16 @@ class MainActivity : AppCompatActivity() {
 
         requestPermission()
         button.setOnClickListener {
-            cameraView.getPicture {
-                //                startActivity(Intent(this@MainActivity, ImageActivity::class.java).apply {
-//                    putExtra("img", it)
-//                })
-
-                image.visibility = View.VISIBLE
-                image.setImageBitmap(imgRotate(makeBitmapFromByteArray(it), 90f))
-
-            }
+            //            cameraView.getPicture {
+//                //                startActivity(Intent(this@MainActivity, ImageActivity::class.java).apply {
+////                    putExtra("img", it)
+////                })
+//
+//                image.visibility = View.VISIBLE
+//                image.setImageBitmap(imgRotate(makeBitmapFromByteArray(it), 90f))
+//
+//            }
+            cameraView.saveImage()
         }
     }
 
@@ -41,9 +41,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun requestPermission() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
-                    arrayOf(Manifest.permission.CAMERA),
+                    arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE),
                     1000);
 
         } else {
