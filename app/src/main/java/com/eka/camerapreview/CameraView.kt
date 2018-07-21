@@ -1,5 +1,6 @@
 package com.eka.camerapreview
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -24,7 +25,7 @@ class CameraView : SurfaceView, SurfaceHolder.Callback {
     constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
     override fun surfaceChanged(surfaceHolder: SurfaceHolder?, i: Int, w: Int, h: Int) {
-        mCamera?.autoFocus { b, camera -> }
+        setFocus { b, camera -> }
         if (surfaceHolder?.surface == null)
             return
     }
@@ -48,6 +49,7 @@ class CameraView : SurfaceView, SurfaceHolder.Callback {
             setDisplayOrientation(90)
             setPreviewDisplay(surfaceHolder)
             startPreview()
+
             val params = parameters
             val sizes = params.supportedPreviewSizes
             getOptimumSize().let {
@@ -59,8 +61,6 @@ class CameraView : SurfaceView, SurfaceHolder.Callback {
     }
 
     private fun getOptimumSize(): Camera.Size {
-        var ratioWidth = 0
-        var ratioHeight = 0
         mCamera?.run {
             val params = parameters
             var biggestWidth = params.supportedPreviewSizes.first().width
@@ -76,8 +76,6 @@ class CameraView : SurfaceView, SurfaceHolder.Callback {
                 } else
                     i++
             }
-            ratioHeight = biggestHeight
-            ratioWidth = biggestWidth
 
             params.supportedPictureSizes.forEach {
                 var width = it.width
@@ -93,7 +91,7 @@ class CameraView : SurfaceView, SurfaceHolder.Callback {
                     } else
                         i++
                 }
-                if (width == ratioWidth && height == ratioHeight) {
+                if (width == biggestWidth && height == biggestHeight) {
                     return it
 
                 }
@@ -105,22 +103,6 @@ class CameraView : SurfaceView, SurfaceHolder.Callback {
 
     fun getPicture(callback: (img: ByteArray) -> Unit) {
         mCamera?.takePicture(null, null) { biteArray, camera ->
-
-            //            val params = mCamera!!.parameters
-//            val w = params.previewSize.width
-//            val h = params.previewSize.height
-//            val format = params.previewFormat
-//
-//            val image = YuvImage(biteArray, format, w, h, null)
-//            val out = ByteArrayOutputStream()
-//            val area = Rect(0, 0, w, h)
-//
-//            image.compressToJpeg(area, 50, out)
-
-//            callback.invoke(BitmapFactory.decodeByteArray(out.toByteArray(), 0, out.size()))
-
-//            val bmp = BitmapFactory.decodeByteArray(biteArray, 0, biteArray.size)
-
             callback.invoke(biteArray)
         }
     }
@@ -131,15 +113,17 @@ class CameraView : SurfaceView, SurfaceHolder.Callback {
         }
     }
 
+    @SuppressLint("SimpleDateFormat")
     fun saveImage() {
         getPicture { img ->
             val bmp = BitmapFactory.decodeByteArray(img, 0, img.size)
-            var folder = Environment.getExternalStorageDirectory().absolutePath + "/myCamera/img/"
-            val filename = "img${SimpleDateFormat("yyyyMMddhhmmss").format(Date())}.jpg"
-            Log.e("asdf", filename)
-            var folderPath = File(folder)
+            val folder = Environment.getExternalStorageDirectory().absolutePath + "/myCamera/img/"
+            val filename = "${SimpleDateFormat("yyyyMMddhhmmss").format(Date())}.jpg"
+
+            val folderPath = File(folder)
             if (!folderPath.isDirectory)
                 folderPath.mkdirs()
+
             val out = FileOutputStream(folder + filename)
             bmp.compress(Bitmap.CompressFormat.JPEG, 100, out)
             out.close()
