@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">GoogleMap</string>
+    <string name="google_maps_key">AIzaSyDddlcNu0PsBilbIJHZ4mZZiNxSRRO1QOo</string>
+    <!--google_maps_key는 인터넷에서 구글 map api 등록 ㄲ-->
+</resources>
