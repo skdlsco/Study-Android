@@ -10,6 +10,8 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -17,6 +19,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private val PERMISSION_CODE = 1000
     lateinit var mMap: GoogleMap
     lateinit var gpsInfo: GpsInfo
+    var markers = ArrayList<Marker>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -33,8 +37,23 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
+    private fun addMarker(latLng: LatLng) {
+        markers.add(mMap.addMarker(MarkerOptions().apply {
+            position(latLng)
+//            icon()
+            snippet("snippet")
+            title("title")
+        }))
+
+        // 지우는법
+//        markers.removeAt(0).remove()
+    }
+
     private fun setCameraLocation() {
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(gpsInfo.lat, gpsInfo.lon), 15f))
+        val latLng = LatLng(gpsInfo.lat, gpsInfo.lon)
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
+        addMarker(latLng)
+
     }
 
     private fun checkPermission(): Boolean {
