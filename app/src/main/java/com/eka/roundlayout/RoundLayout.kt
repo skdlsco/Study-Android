@@ -67,10 +67,12 @@ class RoundLayout : FrameLayout {
         val mBottomLeftRadius = min(this@RoundLayout.mBottomLeftRadius, height.toFloat(), width.toFloat())
         val mTopRightRadius = min(this@RoundLayout.mTopRightRadius, height.toFloat(), width.toFloat())
         val mTopLeftRadius = min(this@RoundLayout.mTopLeftRadius, height.toFloat(), width.toFloat())
+
         val bottomRightRect = RectF(width - mBottomRightRadius, height - mBottomRightRadius, width.toFloat(), height.toFloat())
         val bottomLeftRect = RectF(0f, height - mBottomLeftRadius, mBottomLeftRadius, height.toFloat())
         val topLeftRect = RectF(0f, 0f, mTopLeftRadius, mTopLeftRadius)
         val topRightRect = RectF(width - mTopRightRadius, 0f, width.toFloat(), mTopRightRadius)
+
         val path = Path().apply {
             // TopLeft
             addArc(topLeftRect, 180f, 90f)
